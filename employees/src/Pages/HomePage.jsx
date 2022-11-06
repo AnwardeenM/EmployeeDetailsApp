@@ -1,11 +1,29 @@
-import React from 'react'
-import EmployeeTable from '../Components/EmployeeTable'
+import { Button, Dialog, DialogContent } from '@mui/material';
+import React, {useState} from 'react'
+import EmployeeTable from '../Components/EmployeeTable';
+import AddEmployee from '../Components/AddEmployees';
 
 const HomePage = () => {
-  return (
-    <div>HomePage
+  const [open,setOpen] = useState(false);
 
-        <div>This is the Home Page with Add functionality</div>
+  const handleClickOpen = ()=>{
+    setOpen(true)
+  }
+  const handleClose = ()=>{
+    setOpen(false)
+  }
+
+  
+  
+  return (
+    <div>
+      <h1>ABC Company Employees List</h1>
+        <Button onClick={handleClickOpen} variant="contained">Add Employees</Button>
+        <Dialog open={open} onClose={handleClose}>
+                <DialogContent>
+                     <AddEmployee/>
+                </DialogContent>
+            </Dialog>
         <EmployeeTable/>
     </div>
   )
