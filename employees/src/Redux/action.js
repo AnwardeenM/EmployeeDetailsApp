@@ -53,9 +53,9 @@ const editEmployeeDetailsFailure=()=>{
     return{type:types.EDIT_EMPLOYEE_DATA_FAILURE}
 }
 
-const editEmployee=(payload)=>(dispatch)=>{
+const editEmployee=(id,payload)=>(dispatch)=>{
     dispatch(editEmployeeDetailsRequest())
-    return axios.patch("https://empdet-teric.herokuapp.com/employees",payload)
+    return axios.patch(`https://empdet-teric.herokuapp.com/employees/${id}`,payload)
     .then((res)=>{
         dispatch(editEmployeeDetailsSuccess(res.data))
         getEmployees();

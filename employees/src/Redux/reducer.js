@@ -31,7 +31,7 @@ export const reducer = (state = initialState,action) => {
             }
         case types.ADD_EMPLOYEE_DATA_SUCCESS:
             return{
-                ...state,isLoading:false,isAuth:true,isError:false,employees:payload,admin:true
+                ...state,isLoading:false,isAuth:true,isError:false,admin:true
             }
         case types.ADD_EMPLOYEE_DATA_FAILURE:
             return{
@@ -50,7 +50,6 @@ export const reducer = (state = initialState,action) => {
             return{
                 ...state,isLoading:false,isError:true,isAuth:false,admin:false
             }
-
             default:
                 return state;
     }

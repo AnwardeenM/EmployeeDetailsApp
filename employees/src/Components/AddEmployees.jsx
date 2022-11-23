@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import {useState} from "react";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getEmployees,addEmployee } from '../Redux/action';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Radio, RadioGroup, TextField } from '@mui/material';
@@ -13,70 +13,80 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 
 export default function AddEmployee() {
-
-  const [firstName,setFirstName] = useState("")
-  const [lastName,setLastName] = useState("");
-  const [value, setValue] = useState(dayjs('2022-04-07'));
-  const [selectedDate,setSelectedDate] = useState(dayjs('11-06-2022'))
-  const [email,setEmail] = useState('')
-  const [phone,setPhone] = useState('')
-  const [gender,setGender] = useState(""); 
-  const [hobbies,setHobbies] = useState("")
   const dispatch =useDispatch();
+  const datas = useSelector((store)=>store.employees);
+  const [userdata,setUserData] = useState({})
+  // const [firstName,setFirstName] = useState("")
+  // const [lastName,setLastName] = useState("");
+  // const [value, setValue] = useState(dayjs('2022-04-07'));
+  // const [selectedDate,setSelectedDate] = useState(dayjs('11-06-2022'))
+  // const [email,setEmail] = useState('')
+  // const [phone,setPhone] = useState('')
+  // const [gender,setGender] = useState(""); 
+  // const [hobbies,setHobbies] = useState([])
+ 
 
-  const handleSubmit = (e)=>{
-    e.preventDefault();
-  if(firstName&&lastName&&selectedDate&&email&&phone&&gender&&hobbies){
-    const payload = {
-       first_name:firstName,
-       last_name:lastName,
-       dob:selectedDate,
-       email:email,
-       phone_number:phone,
-       gender:gender,
-       hobbies:hobbies
-    }
-    dispatch(addEmployee(payload))
-    .then(()=>{
-      dispatch(getEmployees())
-    })
+  const handlechange=(e)=>{
+    const{name,value}=e.target
+    setUserData({...userdata,[name]:value})
+  }
+  const handleSubmit = ()=>{
+    
+  //  if(firstName&&lastName&&value&&email&&phone&&gender&&hobbies){
+  //   const payload = {
+  //      first_name:firstName,
+  //      last_name:lastName,
+  //      dob:value,
+  //      email:email,
+  //      phone_number:phone,
+  //      gender:gender,
+  //      hobbies:hobbies
+  //   }
+    // console.log(payload);
+    console.log(userdata);
+    dispatch(addEmployee(userdata)).then(()=>dispatch(getEmployees()))
     setTimeout(()=>{
       alert("registeration successfull")
-    },1000)
-    
-  }
-  else{
-    alert("Fill the missing details")
-  }
+    },1000)    
+  // else{
+  //   alert("Fill the missing details")
+  // }
 }
 
+// console.log("datas",datas);
 
+// useEffect(()=>{
+//   dispatch(getEmployees())
+// },[])
 
   
   return (
     <Box>
-         <form onSubmit={handleSubmit} >
+         <form  >
             <Stack spacing={3} borderRadius="5px" width="500px" margin="auto" mt={5} p={4}>
                <Box><Typography fontWeight="bolder">REGISTERATION FORM</Typography></Box>
                 <Stack direction="row" justifyContent="center" spacing={3}>
-                  <TextField id='outlined-name'label="Firstname" value={firstName} onChange={(e)=>setFirstName(e.target.value)}/>
-                  <TextField id='outlined-name'label="Lastname" value={lastName} onChange={(e)=>setLastName(e.target.value)}/>
+                  <TextField id='outlined-name'label="Firstname" name="first_name"  onChange={handlechange}/>
+                  <TextField id='outlined-name'label="Lastname" name="last_name"  onChange={handlechange}/>
                 </Stack>
                 <Stack direction="row" justifyContent="center" spacing={8} alignItems="center">
                 <Box>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DatePicker
                           disableFuture
                           label="Responsive"
                           openTo="year"
                           views={['year', 'month', 'day']}
+                          name="selectedDate"
                           value={value}
                           onChange={(newValue) => {
                             setValue(newValue);
                           }}
                           renderInput={(params) => <TextField {...params} />}
                         />
-                    </LocalizationProvider>
+                        
+                    </LocalizationProvider> */}
+                    <input type="date" name="dob" onChange={handlechange}></input>
                 </Box>
                 <Box>
                     <FormControl>
@@ -84,29 +94,28 @@ export default function AddEmployee() {
                         <RadioGroup
                           row
                           aria-labelledby="demo-row-radio-buttons-group-label"
-                          name="row-radio-buttons-group"
-                          value={gender}
-                          onChange={(e)=>setGender(e.target.value)}
+                          name="row-radio-buttons-group"        
+                          onChange={handlechange}
                         >
-                          <FormControlLabel value="Male" control={<Radio />} label="Male" />
-                          <FormControlLabel value="Female" control={<Radio />} label="Female" />
+                          <FormControlLabel value="Male" control={<Radio />} name="gender" label="Male" />
+                          <FormControlLabel value="Female" control={<Radio />} name="gender" label="Female" />
                         </RadioGroup>
                       </FormControl>
                 </Box>
                 </Stack>
                 <Stack direction="row" justifyContent="center" spacing={3}>
-                  <Box><TextField id='outlined-name'label="Email" type="email" value={email} onChange={(e)=>setEmail(e.target.value)}/></Box>
-                  <Box><TextField id='outlined-name'label="Phone number" type="text" value={phone} onChange={(e)=>setPhone(e.target.value)}/></Box>
+                  <Box><TextField id='outlined-name'label="Email" type="email" name="email"  onChange={handlechange}/></Box>
+                  <Box><TextField id='outlined-name'label="Phone number" type="text" name="phone_number" onChange={handlechange}/></Box>
                 </Stack>
                 <Box>
                   <FormLabel>Hobbies</FormLabel>
-                  <FormGroup sx={{width:"200px", margin:"auto"}} value={hobbies} onChange={(e)=>setHobbies(e.target.value)}>
-                      <FormControlLabel value="Travelling" control={<Checkbox/>} label="Travelling"/>
-                      <FormControlLabel value="Atheletics" control={<Checkbox/>} label="Atheletics"/>
-                      <FormControlLabel value="Yoga" control={<Checkbox/>} label="Yoga"/>
+                  <FormGroup sx={{width:"200px", margin:"auto"}} onChange={handlechange}>
+                      <FormControlLabel value="Travelling" name="hobbies" control={<Checkbox/>} label="Travelling"/>
+                      <FormControlLabel value="Atheletics" name="hobbies" control={<Checkbox/>} label="Atheletics"/>
+                      <FormControlLabel value="Yoga" name="hobbies" control={<Checkbox/>} label="Yoga"/>
                   </FormGroup>
                 </Box>
-                <Box><Button type="submit">submit</Button></Box>
+                <Box><Button variant='contained' onClick={handleSubmit}>Submit</Button></Box>
             </Stack>
          </form>
     </Box>

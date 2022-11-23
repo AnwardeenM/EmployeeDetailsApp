@@ -18,7 +18,7 @@ const HomePage = () => {
   return (
     <div>
       <h1>ABC Company Employees List</h1>
-        <Button onClick={handleClickOpen} variant="contained">Add Employees</Button>
+        <Button onClick={handleClickOpen}>Add Employees</Button>
         <Dialog open={open} onClose={handleClose}>
                 <DialogContent>
                      <AddEmployee/>

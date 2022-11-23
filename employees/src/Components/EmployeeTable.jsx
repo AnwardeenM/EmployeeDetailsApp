@@ -41,18 +41,18 @@ export default function EmployeeTable() {
   const [open, setOpen] = useState(false);
   const [firstName,setFirstName] = useState('')
   const [lastName,setLastName] = useState("");
-  const [selectedDate,setSelectedDate] = useState(dayjs('11-06-2022'))
+  const [selectedDate,setSelectedDate] = useState(dayjs('04-07-2022'))
   const [email,setEmail] = useState('')
   const [phone,setPhone] = useState('')
   const [gender,setGender] = useState(""); 
-  const [selectHobbies,setSelectHobbies] = useState("")
+  const [selectHobbies,setSelectHobbies] = useState([])
   const [currentId,setCurrentId] = useState('');
   const dispatch = useDispatch();
-  console.log(rows);
+  // console.log(rows);
   
   const handleClickOpen = (id) => {
     setCurrentId(id)   
-    console.log(currentId)
+    // console.log(currentId)
     setOpen(true);
   };
 
@@ -74,16 +74,19 @@ export default function EmployeeTable() {
         }
         dispatch(editEmployee(currentId,payload))
         .then(()=>{
+          console.log("After adding Data")
             dispatch(getEmployees())
         })
      }
 }
 
   useEffect(() => {
-    if (rows.length === 0) {
+    if (rows.length>=0) {
       dispatch(getEmployees());
     }
-  }, [dispatch,rows.length]);
+    // dispatch(getEmployees())
+  }, []);
+  // console.log(rows);
 
 
 
@@ -91,14 +94,14 @@ export default function EmployeeTable() {
   return (
     <>
       <Typography p={3} variant="h4">EMPLOYEE DETAILS</Typography>
-      <Box textAlign="end" p={3}>
+      {/* <Box textAlign="end" p={3}>
         <Button onClick={handleClickOpen} variant='contained'>ADD DATA</Button>
         <Dialog open={open} onClose={handleClose}>
             <DialogContent>
                 <AddEmployee/>
             </DialogContent>
         </Dialog>
-      </Box>
+      </Box> */}
       <Box>
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
@@ -114,8 +117,8 @@ export default function EmployeeTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <StyledTableRow key={row.first_name}>
+          {rows?.map((row) =>{
+          return <StyledTableRow key={row.id}>
               <StyledTableCell component="th" scope="row">
                 {row.first_name}{row.last_name}
               </StyledTableCell>
@@ -124,7 +127,8 @@ export default function EmployeeTable() {
               <StyledTableCell align="right">{row.phone}</StyledTableCell>
               <StyledTableCell align="right">{row.gender}</StyledTableCell>
               <StyledTableCell align="right">{row.hobbies}</StyledTableCell>
-              <StyledTableCell align="right"><Button onClick={handleEdit} variant="contained">Edit</Button>
+              <StyledTableCell align="right">
+                <Button onClick={handleClickOpen} variant="contained">Edit</Button>
               <Dialog open={open} onClose={handleClose}>
                         <DialogContent>
                           <form onSubmit={handleEdit}>
@@ -270,7 +274,7 @@ export default function EmployeeTable() {
               </StyledTableCell>
 
             </StyledTableRow>
-          ))}
+          })}
         </TableBody>
       </Table>
     </TableContainer>
